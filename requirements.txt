@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+googletrans==4.0.0rc1
+gtts
+PyPDF2
+python-multipart
+requests
+python-docx

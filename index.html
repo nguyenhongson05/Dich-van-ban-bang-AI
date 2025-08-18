@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Translator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen p-6">
+    <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">AI Translator</h1>
+
+        <!-- Dịch văn bản -->
+        <section class="mb-8">
+            <h2 class="text-xl font-semibold mb-3">Dịch văn bản</h2>
+            <textarea id="inputText" placeholder="Nhập văn bản..." class="w-full p-3 border rounded-md mb-2"></textarea>
+            <select id="lang" class="border rounded-md p-2 mb-2 w-full">
+        <option value="en">Tiếng Anh</option>
+        <option value="vi">Tiếng Việt</option>
+        <option value="fr">Tiếng Pháp</option>
+        <option value="ja">Tiếng Nhật</option>
+      </select>
+            <button id="translateBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 w-full">Dịch</button>
+            <div id="output" class="mt-2 p-3 border rounded-md bg-gray-50 min-h-[80px] whitespace-pre-wrap"></div>
+        </section>
+
+        <hr class="my-6">
+
+        <!-- Dịch file / ảnh -->
+        <section class="mb-8">
+            <h2 class="text-xl font-semibold mb-3">Dịch file văn bản / ảnh</h2>
+            <input type="file" id="fileInput" accept=".txt,.jpg,.jpeg,.png,.bmp,.tiff" class="mb-2 w-full" />
+            <select id="fileLang" class="border rounded-md p-2 mb-2 w-full">
+        <option value="en">Tiếng Anh</option>
+        <option value="vi">Tiếng Việt</option>
+        <option value="fr">Tiếng Pháp</option>
+        <option value="ja">Tiếng Nhật</option>
+      </select>
+            <button id="fileTranslateBtn" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 w-full">Dịch file</button>
+            <div id="fileOutput" class="mt-2 p-3 border rounded-md bg-gray-50 min-h-[120px] whitespace-pre-wrap"></div>
+        </section>
+
+        <hr class="my-6">
+
+        <!-- Text-to-Speech -->
+        <section>
+            <h2 class="text-xl font-semibold mb-3">Text-to-Speech</h2>
+            <textarea id="ttsText" placeholder="Nhập văn bản..." class="w-full p-3 border rounded-md mb-2"></textarea>
+            <select id="ttsLang" class="border rounded-md p-2 mb-2 w-full">
+        <option value="vi">Tiếng Việt</option>
+        <option value="en">Tiếng Anh</option>
+        <option value="fr">Tiếng Pháp</option>
+        <option value="ja">Tiếng Nhật</option>
+      </select>
+            <button id="ttsBtn" class="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600 w-full">Chuyển thành giọng nói</button>
+            <audio id="ttsAudio" controls class="mt-2 w-full"></audio>
+        </section>
+    </div>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000";
+
+        // ---------------- Dịch văn bản ----------------
+        document.getElementById("translateBtn").addEventListener("click", async() => {
+            const text = document.getElementById("inputText").value.trim();
+            const target_lang = document.getElementById("lang").value;
+            if (!text) return alert("Nhập văn bản trước!");
+
+            const form = new FormData();
+            form.append("text", text);
+            form.append("target_lang", target_lang);
+
+            const output = document.getElementById("output");
+            output.textContent = "⏳ Đang dịch...";
+
+            try {
+                const res = await fetch(`${API_URL}/translate`, {
+                    method: "POST",
+                    body: form
+                });
+                const data = await res.json();
+                output.textContent = data.translated || data.error || "Không có kết quả";
+            } catch (err) {
+                output.textContent = "⚠️ Không thể kết nối backend!";
+                console.error(err);
+            }
+        });
+
+        // ---------------- Dịch file / ảnh ----------------
+        document.getElementById("fileTranslateBtn").addEventListener("click", async() => {
+            const fileInput = document.getElementById("fileInput").files[0];
+            const target_lang = document.getElementById("fileLang").value;
+            if (!fileInput) return alert("Chọn file trước!");
+
+            const form = new FormData();
+            form.append("file", fileInput);
+            form.append("target_lang", target_lang);
+
+            const fileOutput = document.getElementById("fileOutput");
+            fileOutput.textContent = "⏳ Đang xử lý...";
+
+            try {
+                const res = await fetch(`${API_URL}/translate-file`, {
+                    method: "POST",
+                    body: form
+                });
+                const data = await res.json();
+
+                if (data.error) {
+                    fileOutput.textContent = "⚠️ " + data.error;
+                } else {
+                    fileOutput.innerHTML = `
+            <p><strong>Văn bản gốc (OCR):</strong><br>${data.original || "(không có)"}</p>
+            <hr class="my-2">
+            <p><strong>Bản dịch:</strong><br>${data.translated}</p>
+          `;
+                }
+            } catch (err) {
+                fileOutput.textContent = "⚠️ Không thể kết nối backend!";
+                console.error(err);
+            }
+        });
+
+        // ---------------- Text-to-Speech ----------------
+        document.getElementById("ttsBtn").addEventListener("click", async() => {
+            const text = document.getElementById("ttsText").value.trim();
+            const lang = document.getElementById("ttsLang").value;
+            if (!text) return alert("Nhập văn bản trước!");
+
+            const form = new FormData();
+            form.append("text", text);
+            form.append("lang", lang);
+
+            try {
+                const res = await fetch(`${API_URL}/tts`, {
+                    method: "POST",
+                    body: form
+                });
+                const data = await res.json();
+
+                if (data.audio_file) {
+                    const audioEl = document.getElementById("ttsAudio");
+                    audioEl.src = `${API_URL}${data.audio_file}`;
+                    audioEl.play();
+                } else {
+                    alert(data.error || "Lỗi tạo audio");
+                }
+            } catch (err) {
+                alert("Không thể kết nối backend!");
+                console.error(err);
+            }
+        });
+    </script>
+</body>
+
+</html>
