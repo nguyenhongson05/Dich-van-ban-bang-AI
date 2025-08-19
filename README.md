@@ -1,4 +1,4 @@
-# 🖐 NHẬN DIỆN & ĐẾM SỐ NGÓN TAY
+# 🖐 TỰ ĐỘNG DỊCH VÀ CHUẨN HÓA TÀI LIỆU ĐA NGÔN NGỮ BẰNG AI
 
 ![dainam](https://github.com/user-attachments/assets/bc536edc-1836-49d0-b8c3-1f139d34276f)
 
@@ -37,6 +37,6 @@ Dự án này xây dựng một hệ thống có khả năng:
 - 4️⃣Chạy backend bằng FastAPI (uvicorn).
 - 5️⃣Chạy frontend bằng React (npm start).
 - 5️⃣Truy cập web tại http://localhost:3000, upload ảnh hoặc nhập văn bản để dịch.
-![Dich 1](https://github.com/user-attachments/assets/f6207e23-bc62-48ec-801a-5891631bdedc)
+![Dich 1](https://github.com/nguyenhongson05/Dich-van-ban-bang-AI/blob/main/dich1.png)
 
 © 2025 NHÓM 10, TỰ ĐỘNG DỊCH VÀ CHUẨN HÓA TÀI LIỆU ĐA NGÔN NGỮ BẰNG AI, CÔNG NGHỆ THÔNG TIN TRONG CHUYỂN ĐỔI SỐ, TRƯỜNG ĐẠI HỌC Đại NAM
