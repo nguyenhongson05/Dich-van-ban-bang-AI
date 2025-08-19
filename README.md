@@ -1,6 +1,6 @@
 # 🖐 TỰ ĐỘNG DỊCH VÀ CHUẨN HÓA TÀI LIỆU ĐA NGÔN NGỮ BẰNG AI
 
-![dainam](https://github.com/user-attachments/assets/bc536edc-1836-49d0-b8c3-1f139d34276f)
+![dainam]([https://github.com/user-attachments/assets/bc536edc-1836-49d0-b8c3-1f139d34276f](https://github.com/nguyenhongson05/Dich-van-ban-bang-AI/blob/main/logo.jpg?raw=true))
 
 ---
 
